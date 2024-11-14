@@ -1,0 +1,50 @@
+schemaVersion: 2.2.2
+metadata:
+  name: quarkus-observability
+components:
+  - name: tools
+    container:
+      image: registry.redhat.io/devspaces/udi-rhel8:3.18
+      env:
+        - name: QUARKUS_HTTP_HOST
+          value: 0.0.0.0
+      endpoints:
+        - exposure: none
+          name: debug
+          protocol: tcp
+          targetPort: 5005
+        - exposure: public
+          name: hello-greeting
+          protocol: https
+          targetPort: 8080
+          path: /hello
+      volumeMounts:
+        - name: m2
+          path: /home/user/.m2
+      cpuLimit: '4'
+      cpuRequest: '1'
+      memoryLimit: '8G'
+      memoryRequest: '4G'
+      mountSources: true
+  - name: m2
+    volume:
+      size: 1G
+commands:
+  - id: package
+    exec:
+      label: "Package the application"
+      component: tools
+      workingDir: ${PROJECTS_ROOT}/quarkus-otlp
+      commandLine: "mvn package"
+      group:
+        kind: build
+        isDefault: true
+  - id: startdev
+    exec:
+      label: "Start Development mode (Hot reload + debug)"
+      component: tools
+      workingDir: ${PROJECTS_ROOT}/quarkus-otlp
+      commandLine: "mvn compile quarkus:dev"
+      group:
+        kind: run
+        isDefault: true
