@@ -1,51 +1,52 @@
 schemaVersion: 2.2.2
 metadata:
   name: quarkus-observability
+attributes:
+  memoryRequest: 512Mi
+  memoryLimit: 1Gi
 components:
   - name: tools
     container:
       image: registry.redhat.io/devspaces/udi-rhel8:latest
-      
-      env:
-        - name: QUARKUS_HTTP_HOST
-          value: 0.0.0.0
+      memoryLimit: 1Gi
+      memoryRequest: 512Mi
+      mountSources: true
       endpoints:
-        - exposure: none
-          name: debug
-          protocol: tcp
-          targetPort: 5005
-        - exposure: public
-          name: hello-greeting
-          protocol: https
+        - name: quarkus-dev
           targetPort: 8080
-          path: /hello
+          exposure: public
       volumeMounts:
         - name: m2
           path: /home/user/.m2
-      cpuLimit: '2'
-      cpuRequest: '1'
-      memoryLimit: '4G'
-      memoryRequest: '2G'
-      mountSources: true
+      args:
+        - "sleep"
+        - "infinity"
+
   - name: m2
     volume:
-      size: 1G
+      size: 1Gi
+
 commands:
-  - id: package
+  - id: build
     exec:
-      label: "Package the application"
       component: tools
+      commandLine: "mvn clean package -Dquarkus.profile=dev"
       workingDir: ${PROJECTS_ROOT}/quarkus-otlp
-      commandLine: "mvn package"
       group:
         kind: build
-        isDefault: true
-  - id: startdev
+
+  - id: dev
     exec:
-      label: "Start Development mode (Hot reload + debug)"
       component: tools
+      commandLine: "mvn quarkus:dev -Dquarkus.profile=dev"
       workingDir: ${PROJECTS_ROOT}/quarkus-otlp
-      commandLine: "mvn compile quarkus:dev"
       group:
         kind: run
-        isDefault: true
+
+  - id: test
+    exec:
+      component: tools
+      commandLine: "mvn test -Dquarkus.profile=test"
+      workingDir: ${PROJECTS_ROOT}/quarkus-otlp
+      group:
+        kind: test
