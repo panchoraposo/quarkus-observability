@@ -4,7 +4,7 @@
   
 ## Create namespace
 
-``oc new-project quarkus-observability``
+`oc new-project quarkus-observability`
 
 ## Deploy on OpenShift
 `cd quarkus-otlp`
