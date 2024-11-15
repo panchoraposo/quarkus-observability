@@ -3,8 +3,7 @@
 
   
 ## Create namespace
-
-``oc new-project quarkus-observability``
+`oc new-project quarkus-observability`
 
 ## Deploy on OpenShift
 `cd quarkus-otlp`
@@ -14,6 +13,7 @@
 ## Monitoring stack
 
 ### OpenTelemetry Collector + Prometheus + Jaeger
+
 Install operators:
  - Red Hat OpenShift distributed tracing platform --> Deploy jaeger-all-in-one-memory.
  - Red Hat build of OpenTelemetry --> Deploy otel-collector:
@@ -30,4 +30,4 @@ Install operators:
 - Loki Operator --> Create LokiStack:
   `oc apply -f logging/lokistack.yaml`
 
-## Tekton Pipelines + Github trigger
+## Tekton Pipeline + Github trigger
