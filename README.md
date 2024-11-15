@@ -30,4 +30,4 @@ Install operators:
 - Loki Operator --> Create LokiStack:
   `oc apply -f logging/lokistack.yaml`
 
-## Tekton Pipelines + Github trigger
+## Tekton Pipeline + Github trigger
