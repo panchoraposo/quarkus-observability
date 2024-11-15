@@ -114,7 +114,7 @@ spec:
       - name: FORMAT
         value: "oci"
       - name: SKIP_PUSH
-        value: true
+        value: false
     workspaces:
       - name: source
         workspace: source-folder
