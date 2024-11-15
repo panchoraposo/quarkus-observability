@@ -1,0 +1,10 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: quarkus-observability-trigger-binding
+spec:
+  params:
+    - name: git-revision
+      value: $(body.head_commit.id)
+    - name: git-repository-url
+      value: $(body.repository.clone_url)

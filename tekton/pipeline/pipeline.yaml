@@ -1,0 +1,123 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: quarkus-observability
+spec:
+  params:
+    - default: 'https://github.com/panchoraposo/quarkus-observability.git'
+      description: source repo that contains the application code
+      name: source-repo
+      type: string
+    - default: main
+      description: source branch to build from
+      name: source-branch
+      type: string
+    - default: 'quarkus-otlp'
+      type: string
+      name: CONTEXT_DIR
+    - default: 'quay.io/fraposo/$(params.CONTEXT_DIR):$(context.pipelineRun.uid)'
+      type: string
+      name: IMAGE
+    - name: quay-io-account
+      type: string
+      default: "fraposo"
+    - name: quay-io-repository
+      type: string
+      default: "quarkus-observability"
+    - name: quay-io-image-tag-name
+      type: string
+      default: "latest"
+    - name: STORAGE_DRIVER
+      type: string
+      default: 'overlay'
+    - name: sonarqube_url
+      type: string
+      default: ''
+    - name: sonarqube_token
+      type: string
+      default: ''
+     
+  tasks:
+  - name: git-clone
+    params:
+      - name: url
+        value: $(params.source-repo)
+      - name: revision
+        value: $(params.source-branch)
+      - name: deleteExisting
+        value: true
+    taskRef:
+      kind: ClusterTask
+      name: git-clone
+    workspaces:
+      - name: output
+        workspace: source-folder
+
+  - name: package
+    taskRef:
+      name: maven
+    params:
+    - name: CONTEXT_DIR
+      value: $(params.CONTEXT_DIR)
+    - name: GOALS
+      value:
+        - clean
+        - package
+    runAfter: ["git-clone"]
+    workspaces:
+    - name: output
+      workspace: source-folder
+
+  - name: test
+    taskRef:
+      name: maven
+    runAfter: ["package"]
+    params:
+    - name: GOALS
+      value: ["verify"]
+    - name: CONTEXT_DIR
+      value: $(params.CONTEXT_DIR)
+    workspaces:
+    - name: output
+      workspace: source-folder
+  
+  #- name: code-analysis
+  #  taskRef:
+  #    name: maven
+  #  runAfter:
+  #    - test
+  #  workspaces:
+  #  - name: output
+  #    workspace: source-folder
+  #  params:
+  #  - name: GOALS
+  #    value:
+  #    - install
+  #    - sonar:sonar
+  #    - -f
+  #    - $(params.CONTEXT_DIR)
+  #    - -Dsonar.host.url=$(params.sonarqube-url)
+  #    - -Dsonar.token=$(params.sonarqube-token)
+  #    - -Dsonar.userHome=/tmp/sonar
+  #    - -DskipTests=true
+
+  - name: build-image
+    taskRef:
+      name: buildah
+      kind: ClusterTask
+    runAfter: ["test"]
+    params:
+      - name: IMAGE
+        value: $(params.IMAGE)
+      - name: CONTEXT
+        value: $(params.CONTEXT_DIR)
+      - name: FORMAT
+        value: "oci"
+      - name: SKIP_PUSH
+        value: true
+    workspaces:
+      - name: source
+        workspace: source-folder
+     
+  workspaces:
+  - name: source-folder

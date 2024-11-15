@@ -1,0 +1,10 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: quarkus-observability-event-listener
+spec:
+  to:
+    kind: Service
+    name: el-quarkus-observability-event-listener
+  port:
+    targetPort: http-listener

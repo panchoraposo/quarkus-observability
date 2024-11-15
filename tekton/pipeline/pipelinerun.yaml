@@ -1,0 +1,11 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: quarkus-observability
+spec:
+  pipelineRef:
+    name: quarkus-observability
+  workspaces:
+  - name: source-folder
+    persistentVolumeClaim:
+      claimName: maven-repo-pvc

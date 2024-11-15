@@ -1,0 +1,29 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: quarkus-observability-trigger-template
+spec:
+  params:
+    - name: git-revision
+      description: The Git revision
+      default: main
+    - name: git-repository-url
+      description: The Git repository URL
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: quarkus-observability-pipeline-run-
+      spec:
+        pipelineRef:
+          name: quarkus-observability
+        params:
+          - name: git-revision
+            value: $(tt.params.git-revision)
+          - name: git-repository-url
+            value: $(tt.params.git-repository-url)
+        workspaces:
+        - name: source-folder
+          persistentVolumeClaim:
+            claimName: maven-repo-pvc
+  

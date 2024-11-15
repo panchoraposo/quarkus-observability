@@ -1,0 +1,12 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: quarkus-observability-event-listener
+spec:
+  serviceAccountName: tekton-triggers-demo-sa
+  triggers:
+    - name: github-trigger
+      bindings:
+        - ref: quarkus-observability-trigger-binding
+      template:
+        ref: quarkus-observability-trigger-template
