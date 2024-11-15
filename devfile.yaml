@@ -31,7 +31,7 @@ commands:
     exec:
       component: tools
       commandLine: "mvn clean package -Dquarkus.profile=dev"
-      workingDir: ${PROJECTS_ROOT}/quarkus-observability
+      workingDir: ${PROJECTS_ROOT}/quarkus-observability/quarkus-otlp
       group:
         kind: build
 
@@ -39,7 +39,7 @@ commands:
     exec:
       component: tools
       commandLine: "mvn quarkus:dev -Dquarkus.profile=dev"
-      workingDir: ${PROJECTS_ROOT}/quarkus-observability
+      workingDir: ${PROJECTS_ROOT}/quarkus-observability/quarkus-otlp
       group:
         kind: run
 
@@ -47,6 +47,6 @@ commands:
     exec:
       component: tools
       commandLine: "mvn test -Dquarkus.profile=test"
-      workingDir: ${PROJECTS_ROOT}/quarkus-observability
+      workingDir: ${PROJECTS_ROOT}/quarkus-observability/quarkus-otlp
       group:
         kind: test
