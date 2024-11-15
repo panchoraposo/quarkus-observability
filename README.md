@@ -1,5 +1,5 @@
 
-# Quarkus & OpenTelemetry
+# Quarkus Observability
 
   
 ## Create namespace
