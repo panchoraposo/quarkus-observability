@@ -14,6 +14,7 @@
 ## Monitoring stack
 
 ### OpenTelemetry Collector + Prometheus + Jaeger
+
 Install operators:
  - Red Hat OpenShift distributed tracing platform --> Deploy jaeger-all-in-one-memory.
  - Red Hat build of OpenTelemetry --> Deploy otel-collector:
