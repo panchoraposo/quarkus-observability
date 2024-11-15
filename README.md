@@ -1,5 +1,5 @@
 
-# Quarkus Observability
+# Quarkus Observability & Pipelines
 
   
 ## Create namespace
