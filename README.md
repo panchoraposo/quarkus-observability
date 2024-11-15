@@ -1,5 +1,5 @@
 
-# Quarkus Observability & CICD
+# Quarkus Observability
 
   
 ## Create namespace
