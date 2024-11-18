@@ -118,6 +118,10 @@ spec:
     workspaces:
       - name: source
         workspace: source-folder
+      - name: dockerconfig
+        workspace: dockerconfig
      
   workspaces:
   - name: source-folder
+  - name: dockerconfig
+    description: Workspace for Docker credentials

@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: buildah-task
+spec:
+  workspaces:
+    - name: dockerconfig
+      description: Workspace for Docker authentication config
+  params:
+    - name: IMAGE
+      description: Image to be built and pushed
+      type: string
+  steps:
+    - name: buildah-bud
+      image: quay.io/buildah/stable
+      script: |
+        #!/bin/bash
+        set -e
+        export DOCKER_CONFIG=/workspace/dockerconfig
+        buildah bud -t $(params.IMAGE) .
+    - name: buildah-push
+      image: quay.io/buildah/stable
+      script: |
+        #!/bin/bash
+        set -e
+        export DOCKER_CONFIG=/workspace/dockerconfig
+        buildah push $(params.IMAGE)

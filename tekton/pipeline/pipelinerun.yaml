@@ -6,6 +6,9 @@ spec:
   pipelineRef:
     name: quarkus-observability
   workspaces:
-  - name: source-folder
-    persistentVolumeClaim:
-      claimName: maven-repo-pvc
+    - name: source-folder
+      persistentVolumeClaim:
+        claimName: maven-repo-pvc
+    - name: dockerconfig
+      secret:
+        secretName: quay-registry
