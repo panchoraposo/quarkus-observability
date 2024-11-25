@@ -31,3 +31,4 @@ Install operators:
   `oc apply -f logging/lokistack.yaml`
 
 ## Tekton Pipeline + Github trigger
+Trigger:
